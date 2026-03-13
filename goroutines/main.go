@@ -3,19 +3,25 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"sync"
 )
+
+var wg sync.WaitGroup
 
 func main() {
 	// go greeter("Hello")
 	// greeter("world")
+
 	websites := []string{
 		"https://github.com",
 		"https://go.dev",
 	}
 
 	for _, web := range websites {
-		getStatusCode(web)
+		go getStatusCode(web)
+		wg.Add(1)
 	}
+	wg.Wait()
 }
 
 //	func greeter(s string) {
@@ -25,6 +31,7 @@ func main() {
 //		}
 //	}
 func getStatusCode(endpoint string) {
+	defer wg.Done()
 	res, err := http.Get(endpoint)
 	if err != nil {
 		fmt.Println(err)
