@@ -7,14 +7,12 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
-
-func Connect() {
-	db, err := gorm.Open(postgres.Open("connection string"), &gorm.Config{})
+func Connect() *gorm.DB {
+	db, err := gorm.Open(postgres.Open("postgres://postgres:tiger@localhost:5432/postgres"), &gorm.Config{})
 
 	if err != nil {
 		panic(err)
 	}
 	db.AutoMigrate(&models.User{})
-	DB = db
+	return db
 }
